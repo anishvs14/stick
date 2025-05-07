@@ -1,0 +1,251 @@
+Web application using TypeScript..
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>TypeScript Counter</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <h1>Simple Counter</h1>
+  <div id="counter">0</div>
+  <button id="increment">Increment</button>
+
+  <script src="app.js"></script> <!-- compiled TypeScript file -->
+</body>
+</html>
+(css)
+body {
+  font-family: Arial, sans-serif;
+  text-align: center;
+  margin-top: 50px;
+}
+
+#counter {
+  font-size: 48px;
+  margin: 20px;
+}
+(ts)
+let counter: number = 0;
+
+const counterElement = document.getElementById("counter")!;
+const incrementButton = document.getElementById("increment")!;
+
+incrementButton.addEventListener("click", () => {
+  counter++;
+  counterElement.textContent = counter.toString();
+});
+
+inheritance---
+// Base class
+class Person {
+  name: string;
+  age: number;
+
+  constructor(name: string, age: number) {
+    this.name = name;
+    this.age = age;
+  }
+
+  greet(): void {
+    console.log(`Hello, my name is ${this.name} and I am ${this.age} years old.`);
+  }
+}
+
+// Derived class
+class Employee extends Person {
+  jobTitle: string;
+
+  constructor(name: string, age: number, jobTitle: string) {
+    super(name, age); // Call the base class constructor
+    this.jobTitle = jobTitle;
+  }
+
+  describeJob(): void {
+    console.log(`I work as a ${this.jobTitle}.`);
+  }
+}
+
+// Using the classes
+const emp = new Employee("Alice", 30, "Software Developer");
+emp.greet();        // Output: Hello, my name is Alice and I am 30 years old.
+emp.describeJob();  // Output: I work as a Software Developer.
+Web application using AngularJS Framework---
+<!DOCTYPE html>
+<html ng-app="todoApp">
+<head>
+  <meta charset="UTF-8">
+  <title>AngularJS TODO App</title>
+  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
+  <script src="app.js"></script>
+  <style>
+    body { font-family: Arial; padding: 20px; }
+    input { margin-right: 10px; }
+  </style>
+</head>
+<body ng-controller="TodoController">
+
+  <h1>Todo List</h1>
+
+  <input type="text" ng-model="newTask" placeholder="Add new task">
+  <button ng-click="addTask()">Add</button>
+
+  <ul>
+    <li ng-repeat="task in tasks">
+      {{ task.text }}
+      <button ng-click="removeTask($index)">Remove</button>
+    </li>
+  </ul>
+
+</body>
+</html>
+angular.module('todoApp', [])
+  .controller('TodoController', function($scope) {
+    $scope.tasks = [
+      { text: 'Learn AngularJS' },
+      { text: 'Build a TODO app' }
+    ];
+
+    $scope.addTask = function() {
+      if ($scope.newTask) {
+        $scope.tasks.push({ text: $scope.newTask });
+        $scope.newTask = '';
+      }
+    };
+
+    $scope.removeTask = function(index) {
+      $scope.tasks.splice(index, 1);
+    };
+  });
+Web services using AngularJS Framework--
+<!DOCTYPE html>
+<html ng-app="userApp">
+<head>
+  <meta charset="UTF-8">
+  <title>AngularJS HTTP Example</title>
+  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
+  <script src="app.js"></script>
+  <style>
+    body { font-family: Arial; padding: 20px; }
+  </style>
+</head>
+<body ng-controller="UserController">
+
+  <h1>User List</h1>
+
+  <button ng-click="loadUsers()">Load Users</button>
+
+  <ul>
+    <li ng-repeat="user in users">
+      {{ user.name }} - {{ user.email }}
+    </li>
+  </ul>
+
+</body>
+</html>
+angular.module('userApp', [])
+  .controller('UserController', function($scope, $http) {
+    $scope.users = [];
+
+    $scope.loadUsers = function() {
+      $http.get('https://jsonplaceholder.typicode.com/users')
+        .then(function(response) {
+          $scope.users = response.data;
+        })
+        .catch(function(error) {
+          console.error('Error fetching users:', error);
+        });
+    };
+  });
+. Web application using AJAX---
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>AJAX Example</title>
+  <style>
+    body { font-family: Arial; padding: 20px; }
+    #users { margin-top: 20px; }
+  </style>
+</head>
+<body>
+
+  <h1>AJAX User List</h1>
+  <button onclick="loadUsers()">Load Users</button>
+
+  <ul id="users"></ul>
+
+  <script src="script.js"></script>
+</body>
+</html>
+function loadUsers() {
+  const xhr = new XMLHttpRequest();
+  xhr.open('GET', 'https://jsonplaceholder.typicode.com/users', true);
+
+  xhr.onload = function () {
+    if (xhr.status === 200) {
+      const users = JSON.parse(xhr.responseText);
+      let output = '';
+      users.forEach(user => {
+        output += `<li>${user.name} - ${user.email}</li>`;
+      });
+      document.getElementById('users').innerHTML = output;
+    } else {
+      console.error('Failed to fetch users');
+    }
+  };
+
+  xhr.onerror = function () {
+    console.error('Request error...');
+  };
+
+  xhr.send();
+}
+Validation using AJAX---
+<!DOCTYPE html>
+<html>
+<head>
+  <title>AJAX Validation</title>
+</head>
+<body>
+  <h2>AJAX Username Validation</h2>
+  <form>
+    <label for="username">Username:</label>
+    <input type="text" id="username" onkeyup="validateUsername()" />
+    <span id="result"></span>
+  </form>
+
+  <script src="script.js"></script>
+</body>
+</html>
+function validateUsername() {
+  const username = document.getElementById("username").value;
+
+  const xhr = new XMLHttpRequest();
+  xhr.open("POST", "validate.php", true);
+  xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+
+  xhr.onreadystatechange = function () {
+    if (xhr.readyState === 4 && xhr.status === 200) {
+      document.getElementById("result").innerText = xhr.responseText;
+    }
+  };
+
+  xhr.send("username=" + encodeURIComponent(username));
+}
+<?php
+if (isset($_POST['username'])) {
+    $username = trim($_POST['username']);
+
+    if (strlen($username) < 3) {
+        echo "Username too short";
+    } elseif (!preg_match("/^[a-zA-Z0-9_]+$/", $username)) {
+        echo "Invalid characters in username";
+    } else {
+        echo "Username is valid";
+    }
+}
+?>
+
+

@@ -1,0 +1,646 @@
+Exp 2: 
+Index.html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Calculator</title>
+  <style>
+	body {
+  	background-color: #2c3e50;
+  	display: flex;
+  	justify-content: center;
+  	align-items: center;
+  	height: 100vh;
+  	font-family: Arial, sans-serif;
+  	color: white;
+	}
+	.calculator {
+  	background-color: #3a4655;
+  	padding: 20px;
+  	border-radius: 10px;
+  	width: 300px;
+  	box-shadow: 0 0 20px rgba(0,0,0,0.5);
+	}
+	.screen {
+  	background-color: #1e272e;
+  	padding: 10px;
+  	font-size: 1.5rem;
+  	border-radius: 5px;
+  	margin-bottom: 10px;
+  	text-align: right;
+	}
+	.buttons button {
+  	width: 23%;
+  	margin: 1%;
+  	padding: 15px;
+  	font-size: 1rem;
+  	background-color: #425062;
+  	border: none;
+  	color: white;
+  	border-radius: 5px;
+  	cursor: pointer;
+	}
+	.buttons button.operator { color: #ffbc56; }
+	.buttons button.equal { color: #4cd137; }
+	.buttons button.clear { color: #ff6b6b; }
+  </style>
+</head>
+<body>
+  <div class="calculator">
+	<div id="calc-operation" class="screen">0</div>
+	<div id="calc-typed" class="screen">0</div>
+	<div class="buttons">
+  	<button onclick="getValue('7')">7</button>
+  	<button onclick="getValue('8')">8</button>
+  	<button onclick="getValue('9')">9</button>
+  	<button class="operator" onclick="getValue('/')">/</button>
+  	
+  	<button onclick="getValue('4')">4</button>
+  	<button onclick="getValue('5')">5</button>
+  	<button onclick="getValue('6')">6</button>
+  	<button class="operator" onclick="getValue('*')">*</button>
+  	
+  	<button onclick="getValue('1')">1</button>
+  	<button onclick="getValue('2')">2</button>
+  	<button onclick="getValue('3')">3</button>
+  	<button class="operator" onclick="getValue('-')">-</button>
+  	
+  	<button onclick="getValue('0')">0</button>
+  	<button onclick="getValue('.')">.</button>
+  	<button class="clear" onclick="clearAll()">AC</button>
+  	<button class="operator" onclick="getValue('+')">+</button>
+  	
+  	<button onclick="removeLastDigit()">←</button>
+  	<button class="equal" onclick="solve()">=</button>
+	</div>
+  </div>
+  <script src="calculator.js"></script>
+</body>
+</html>
+ 
+app.ts
+const inputVal = document.getElementById('calc-operation') as HTMLDivElement;
+const ans = document.getElementById('calc-typed') as HTMLDivElement;
+ 
+function getValue(val: string): void {
+  if (inputVal.innerText === '0') {
+	inputVal.innerText = val;
+  } else {
+	inputVal.innerText += val;
+  }
+}
+ 
+function solve(): void {
+  const equation = inputVal.innerText;
+  try {
+	const result = new Function(`return ${equation}`)();
+	ans.innerText = result.toString();
+  } catch {
+	inputVal.innerText = 'Error';
+	ans.innerText = 'Error';
+  }
+}
+ 
+function clearAll(): void {
+  inputVal.innerText = '0';
+  ans.innerText = '0';
+}
+ 
+function removeLastDigit(): void {
+  const current = inputVal.innerText;
+  inputVal.innerText = current.length > 1 ? current.slice(0, -1) : '0';
+}
+
+Exp 3: Implement Inheritance using TypeScript and HTML
+bank.ts
+class BankAccount {
+    protected balance: number;
+
+    constructor(initialBalance: number = 0) {
+        this.balance = initialBalance;
+    }
+
+    deposit(amount: number): void {
+        if (amount > 0) {
+            this.balance += amount;
+            this.displayBalance();
+        } else {
+            alert("Enter a positive amount to deposit.");
+        }
+    }
+
+    withdraw(amount: number): void {
+        if (amount > 0 && amount <= this.balance) {
+            this.balance -= amount;
+            this.displayBalance();
+        } else {
+            alert("Invalid withdrawal amount.");
+        }
+    }
+
+    displayBalance(): void {
+        const balanceDisplay = document.getElementById("balance");
+        if (balanceDisplay) balanceDisplay.innerText = this.balance.toFixed(2);
+    }
+}
+
+class SavingsAccount extends BankAccount {
+    constructor(initialBalance: number = 0) {
+        super(initialBalance);
+    }
+
+    override withdraw(amount: number): void {
+        if (this.balance - amount < 100) {
+            alert("Cannot withdraw: Balance cannot fall below ₹100.");
+        } else {
+            super.withdraw(amount);
+        }
+    }
+}
+
+// Create instance
+const account = new SavingsAccount(500);
+
+// Link to buttons
+document.addEventListener("DOMContentLoaded", () => {
+    account.displayBalance();
+
+    const depositBtn = document.getElementById("depositBtn")!;
+    const withdrawBtn = document.getElementById("withdrawBtn")!;
+
+    depositBtn.addEventListener("click", () => {
+        const amt = parseFloat((<HTMLInputElement>document.getElementById("amount")).value);
+        account.deposit(amt);
+    });
+
+    withdrawBtn.addEventListener("click", () => {
+        const amt = parseFloat((<HTMLInputElement>document.getElementById("amount")).value);
+        account.withdraw(amt);
+    });
+});
+
+Index.html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Savings Account</title>
+    <style>
+        body {
+            font-family: Arial;
+            text-align: center;
+            padding-top: 40px;
+        }
+        input {
+            padding: 8px;
+            width: 150px;
+            margin-bottom: 10px;
+        }
+        button {
+            padding: 10px 15px;
+            margin: 5px;
+            cursor: pointer;
+        }
+        .card {
+            display: inline-block;
+            padding: 20px;
+            background: #f1f1f1;
+            border-radius: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <h2>Savings Account</h2>
+        <p>Balance: ₹<span id="balance">0.00</span></p>
+        <input type="number" id="amount" placeholder="Enter amount" />
+        <br>
+        <button id="depositBtn">Deposit</button>
+        <button id="withdrawBtn">Withdraw</button>
+    </div>
+
+    <script src="bank.js"></script> <!-- Compiled JS from bank.ts -->
+</body>
+</html>
+
+Exp 4: Design a single page Web application using AngularJS Framework.
+<!DOCTYPE html>
+<html lang="en" ng-app="taskApp">
+<head>
+    <meta charset="UTF-8">
+    <title>AngularJS SPA - Task Manager</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f5f5f5;
+            padding: 40px;
+            text-align: center;
+        }
+        .task-manager {
+            max-width: 400px;
+            margin: auto;
+            background: #fff;
+            padding: 20px;
+            border-radius: 10px;
+        }
+        input[type="text"] {
+            width: 70%;
+            padding: 8px;
+        }
+        button {
+            padding: 8px 12px;
+            margin-left: 5px;
+        }
+        ul {
+            list-style: none;
+            padding: 0;
+            text-align: left;
+        }
+        li {
+            background: #eee;
+            margin-top: 5px;
+            padding: 8px;
+            display: flex;
+            justify-content: space-between;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="task-manager" ng-controller="TaskController">
+    <h2>AngularJS Task Manager</h2>
+    <input type="text" ng-model="newTask" placeholder="Enter a task">
+    <button ng-click="addTask()">Add</button>
+
+    <ul>
+        <li ng-repeat="task in tasks">
+            {{ task }}
+            <button ng-click="removeTask($index)">Delete</button>
+        </li>
+    </ul>
+</div>
+
+<script>
+    const app = angular.module('taskApp', []);
+
+    app.controller('TaskController', function($scope) {
+        $scope.tasks = [];
+
+        $scope.addTask = function() {
+            if ($scope.newTask) {
+                $scope.tasks.push($scope.newTask);
+                $scope.newTask = '';
+            }
+        };
+
+        $scope.removeTask = function(index) {
+            $scope.tasks.splice(index, 1);
+        };
+    });
+</script>
+
+</body>
+</html>
+
+Exp 5: Design Web services using AngularJS Framework
+<!DOCTYPE html>
+<html lang="en" ng-app="taskApp">
+<head>
+  <meta charset="UTF-8">
+  <title>AngularJS Services Demo</title>
+  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
+  <style>
+    body { font-family: Arial; padding: 30px; text-align: center; background: #f0f0f0; }
+    .container { background: white; padding: 20px; border-radius: 10px; display: inline-block; min-width: 400px; }
+    ul { text-align: left; padding: 0; }
+    li { background: #eee; padding: 10px; margin-top: 5px; border-radius: 5px; }
+  </style>
+</head>
+<body>
+
+<div class="container" ng-controller="TaskController">
+  <h2>AngularJS Services Demo</h2>
+  <p><strong>Current Time:</strong> {{ currentTime }}</p>
+  
+  <input type="text" ng-model="newTask" placeholder="Add a task">
+  <button ng-click="addTask()">Add</button>
+
+  <ul>
+    <li ng-repeat="task in tasks">{{ task }}</li>
+  </ul>
+
+  <h3>Sample Users (from $http)</h3>
+  <ul>
+    <li ng-repeat="user in users">{{ user.name }}</li>
+  </ul>
+</div>
+
+<script>
+  const app = angular.module('taskApp', []);
+
+  //  Custom service to manage tasks
+  app.service('TaskService', function() {
+    let taskList = [];
+
+    this.add = function(task) {
+      taskList.push(task);
+    };
+
+    this.getAll = function() {
+      return taskList;
+    };
+  });
+
+  //  Main controller
+  app.controller('TaskController', function($scope, $http, $timeout, $interval, $log, TaskService) {
+    $scope.tasks = TaskService.getAll();
+    $scope.users = [];
+
+    //  $interval to update time
+    $scope.currentTime = new Date().toLocaleTimeString();
+    $interval(() => {
+      $scope.currentTime = new Date().toLocaleTimeString();
+    }, 1000);
+
+    //  Add task using custom service
+    $scope.addTask = function() {
+      if ($scope.newTask) {
+        TaskService.add($scope.newTask);
+        $scope.newTask = '';
+        $log.info("Task added successfully!");
+      }
+    };
+
+    //  $http to fetch dummy user data
+    $http.get('https://jsonplaceholder.typicode.com/users')
+      .then(response => {
+        $scope.users = response.data;
+      });
+
+    //  $timeout to simulate delayed logging
+    $timeout(() => {
+      $log.info("App initialized and timeout completed.");
+    }, 2000);
+  });
+</script>
+
+</body>
+</html>
+
+
+
+Exp 6: Design and implement a web application using AJAX 
+ 
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AJAX Web Application</title>
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      // Change header after 2 seconds
+      setTimeout(function () {
+        document.getElementById('header').innerText = 'Web X.0';
+      }, 2000);
+ 
+      // Update time every second
+      setInterval(function () {
+        document.getElementById('current-time').innerText = new Date().toLocaleTimeString();
+      }, 1000);
+ 
+      // Show current URL
+      document.getElementById('current-path').innerText = window.location.href;
+ 
+      // Fetch greeting using simulated AJAX
+      function fetchGreeting() {
+        let xhr = new XMLHttpRequest();
+        xhr.open('GET', 'greeting.json', true);
+        xhr.onload = function () {
+          if (xhr.status == 200) {
+            let data = JSON.parse(xhr.responseText);
+            document.getElementById('greeting').innerText = data.greeting;
+          }
+        };
+        xhr.send();
+      }
+      fetchGreeting();
+ 
+      // Logging messages
+      console.log("Application initialized");
+      console.debug("Debugging message");
+      console.warn("Warning message");
+      console.error("Error message");
+    });
+  </script>
+</head>
+<body>
+  <div style="background-color: beige; padding: 10px;">
+    <p>This header will change after two seconds:</p>
+    <h1 id="header">Web</h1>
+  </div>
+ 
+  <div style="background-color: aliceblue; padding: 10px;">
+    <p>The time is:</p>
+    <h1 id="current-time"></h1>
+  </div>
+ 
+  <div style="background-color: lavender; padding: 10px;">
+    <p>Current URL path is:</p>
+    <h2 id="current-path"></h2>
+  </div>
+ 
+  <div style="background-color: lightcyan; padding: 10px;">
+    <p>Custom Greeting:</p>
+    <h2 id="greeting">Loading...</h2>
+  </div>
+</body>
+</html>
+
+
+Exp 7: MongoDB Installation And CRUD Operations.
+show dbs
+use myDatabase
+show collections
+db.createCollection(“users”)
+Insert One Document:db.users.insertOne({ name: "Alice", age: 25, email: "alice@example.com" })
+Insert Multiple Documents: db.users.insertMany([
+  { name: "Bob", age: 30, email: "bob@example.com" },
+  { name: "Carol", age: 22, email: "carol@example.com" }
+])
+READ:
+Find All Documents: db.users.find()
+Find with Condition: db.users.find({ age: { $gt: 25 } })
+Find One Document: db.users.findOne({ name: "Alice" })
+UPDATE:
+Update One Document: db.users.updateOne(
+  { name: "Alice" },
+  { $set: { age: 26 } }
+)
+Update Multiple Documents:db.users.updateMany(
+  { age: { $lt: 30 } },
+  { $inc: { age: 1 } }
+)
+DELETE:
+Delete One Document:db.users.deleteOne({ name: "Bob" })
+Delete Multiple Documents: db.users.deleteMany({ age: { $lt: 25 } })
+
+Exp 8: To implement and integrate RESTful APIs with MongoDB for data storage and retrieval operations.
+npm init -y
+npm install mongodb
+npm init -y
+npm install express mongodb body-parser ejs
+
+server.js
+const express = require('express');
+const { MongoClient } = require('mongodb');
+const path = require('path');
+
+const app = express();
+const port = 3000;
+
+const url = 'mongodb://localhost:27017';
+const client = new MongoClient(url);
+const dbName = 'StudentDB';
+
+app.use(express.json());
+app.use(express.static(path.join(__dirname, 'public')));
+
+app.post('/submit', async (req, res) => {
+    try {
+        await client.connect();
+        const db = client.db(dbName);
+        const collection = db.collection('students');
+
+        const { name, age, course } = req.body;
+        await collection.insertOne({ name, age, course });
+
+        res.json({ message: "Student registered successfully!" });
+    } catch (error) {
+        console.error('Error:', error);
+        res.status(500).json({ message: "Failed to register student" });
+    } finally {
+        await client.close();
+    }
+});
+
+app.listen(port, () => {
+    console.log(`Server running at http://localhost:${port}`);
+});
+
+public/index.html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Student Form</title>
+    <style>
+        body { font-family: Arial, sans-serif; text-align: center; }
+        form { width: 300px; margin: 50px auto; padding: 20px; border: 1px solid #ccc; }
+        input, button { width: 100%; padding: 10px; margin: 10px 0; }
+    </style>
+</head>
+<body>
+    <h2>Student Form</h2>
+    <form id="studentForm">
+        <input type="text" id="name" name="name" placeholder="Student Name" required>
+        <input type="number" id="age" name="age" placeholder="Age" required>
+        <input type="text" id="course" name="course" placeholder="Course" required>
+        <button type="submit">Submit</button>
+    </form>
+    <p id="message"></p>
+
+    <script>
+        document.getElementById('studentForm').addEventListener('submit', async function(event) {
+            event.preventDefault();
+
+            const name = document.getElementById('name').value;
+            const age = document.getElementById('age').value;
+            const course = document.getElementById('course').value;
+
+            const response = await fetch('/submit', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ name, age, course })
+            });
+
+            const result = await response.json();
+            document.getElementById('message').innerText = result.message;
+        });
+    </script>
+</body>
+</html>
+
+Exp 9: Flask Web-page
+python -m venv venv
+venv\Scripts\activate
+
+pip install flask
+
+app.py
+from flask import Flask, render_template, request, redirect, url_for
+
+app = Flask(__name__)
+
+# In-memory task list
+tasks = []
+
+@app.route('/')
+def index():
+    return render_template('index.html', tasks=tasks)
+
+@app.route('/add', methods=['POST'])
+def add_task():
+    task = request.form.get('task')
+    if task:
+        tasks.append(task)
+    return redirect(url_for('index'))
+
+@app.route('/delete/<int:task_id>')
+def delete_task(task_id):
+    if 0 <= task_id < len(tasks):
+        tasks.pop(task_id)
+    return redirect(url_for('index'))
+
+if __name__ == '__main__':
+    app.run(debug=True)
+
+templates/index.html
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Task Manager</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; background: #f7f7f7; }
+        h1 { color: #333; }
+        form { margin-bottom: 20px; }
+        ul { list-style-type: none; padding: 0; }
+        li { background: #fff; margin: 5px 0; padding: 10px; border-radius: 4px; display: flex; justify-content: space-between; }
+        button { background: #e74c3c; color: white; border: none; padding: 5px 10px; cursor: pointer; border-radius: 4px; }
+        button:hover { background: #c0392b; }
+    </style>
+</head>
+<body>
+    <h1>Simple Task Manager</h1>
+    <form method="POST" action="/add">
+        <input type="text" name="task" placeholder="Enter new task" required>
+        <button type="submit">Add Task</button>
+    </form>
+    <ul>
+        {% for task in tasks %}
+        <li>
+            {{ task }}
+            <a href="{{ url_for('delete_task', task_id=loop.index0) }}">
+                <button>Delete</button>
+            </a>
+        </li>
+        {% endfor %}
+    </ul>
+</body>
+</html>
+
+
